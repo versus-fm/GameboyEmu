@@ -36,7 +36,7 @@ public class EmulatorGame : Game
         this.graphics.PreferredBackBufferHeight = 720;
         this.graphics.ApplyChanges();
 
-        var defaultRomPath = "roms/lycscx.gb";
+        var defaultRomPath = "roms/fairylake.gb";
         Encoding.UTF8.GetBytes(defaultRomPath).CopyTo(romFileBuffer, 0);
         
         spriteBatch = new SpriteBatch(GraphicsDevice);
