@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using GameboyEmulator.Architecture;
-using GameboyEmulator.Architecture.Debug;
+using GameboyEmulator.Architecture.DebugTools;
 using GameboyEmulator.Frontend.UI;
 using ImGuiNET;
 using Microsoft.Xna.Framework;

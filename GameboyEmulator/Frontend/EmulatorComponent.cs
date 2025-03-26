@@ -1,6 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using GameboyEmulator.Architecture;
-using GameboyEmulator.Architecture.Debug;
+using GameboyEmulator.Architecture.DebugTools;
 using GameboyEmulator.Architecture.Interface;
 using GameboyEmulator.Architecture.Rendering;
 using GameboyEmulator.IO;
