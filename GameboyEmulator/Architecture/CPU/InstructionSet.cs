@@ -845,15 +845,12 @@ public class InstructionSet
             },
             OpCode.HALT => (IProcessor hardware, ref Registers registers) =>
             {
-                // If IME is disabled and an interrupt is pending, HALT bug occurs
                 if (!hardware.InterruptsEnabled && (hardware.ReadByte((ushort)Addresses.IF) & 0x1F) != 0)
                 {
-                    // HALT bug: PC is not incremented
                     hardware.Cycle(1);
                 }
                 else
                 {
-                    // Normal HALT behavior
                     registers.IncProgramCounter();
                     hardware.Halt();
                     hardware.Cycle(1);
