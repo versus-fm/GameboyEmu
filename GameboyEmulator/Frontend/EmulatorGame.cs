@@ -23,6 +23,8 @@ public class EmulatorGame : Game
     private IntPtr windowTexture;
     private IntPtr spriteTexture;
 
+    private string[] roms;
+
     public EmulatorGame()
     {
         this.IsMouseVisible = true;
@@ -34,10 +36,12 @@ public class EmulatorGame : Game
     {
         this.graphics.PreferredBackBufferWidth = 1280;
         this.graphics.PreferredBackBufferHeight = 720;
+        this.graphics.SynchronizeWithVerticalRetrace = true;
+        this.IsFixedTimeStep = true;
+        this.TargetElapsedTime = TimeSpan.FromMilliseconds(1000d / 60d);
         this.graphics.ApplyChanges();
 
-        var defaultRomPath = "roms/fairylake.gb";
-        Encoding.UTF8.GetBytes(defaultRomPath).CopyTo(romFileBuffer, 0);
+        this.roms = Directory.EnumerateFiles("roms").ToArray();
         
         spriteBatch = new SpriteBatch(GraphicsDevice);
         emulatorComponent = new EmulatorComponent(this);
@@ -74,17 +78,17 @@ public class EmulatorGame : Game
 
         if (windowTexture == IntPtr.Zero && emulatorComponent.GetWindowTexture() != null)
         {
-            windowTexture = imGuiRenderer.BindTexture(emulatorComponent.GetWindowTexture());
+            //windowTexture = imGuiRenderer.BindTexture(emulatorComponent.GetWindowTexture());
         }
         
         if (backgroundTexture == IntPtr.Zero && emulatorComponent.GetBackgroundTexture() != null)
         {
-            backgroundTexture = imGuiRenderer.BindTexture(emulatorComponent.GetBackgroundTexture());
+            //backgroundTexture = imGuiRenderer.BindTexture(emulatorComponent.GetBackgroundTexture());
         }
 
         if (spriteTexture == IntPtr.Zero && emulatorComponent.GetSpriteTexture() != null)
         {
-            spriteTexture = imGuiRenderer.BindTexture(emulatorComponent.GetSpriteTexture());
+            //spriteTexture = imGuiRenderer.BindTexture(emulatorComponent.GetSpriteTexture());
         }
 
         base.Update(gameTime);
@@ -102,6 +106,7 @@ public class EmulatorGame : Game
     {
         ImGui.SetNextWindowPos(Vector2.Zero);
         ImGui.SetNextWindowSize(new Vector2(Window.ClientBounds.Width, Window.ClientBounds.Height));
+        ImGui.SetNextWindowBgAlpha(0.0f);
         ImGui.Begin("Emulator", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.MenuBar | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoBringToFrontOnFocus);
     }
 
@@ -151,15 +156,18 @@ public class EmulatorGame : Game
 
     private byte[] romFileBuffer = new byte[256];
     private bool debugMode = false;
+    private int selectedIndex = -1;
     protected void LayoutRomLoad(GameTime gameTime)
     {
         ImGui.SetNextWindowSize(new Vector2(300, 200));
         if (ImGui.BeginPopupModal("LoadRom"))
         {
-            ImGui.InputText("Rom Path", romFileBuffer, 256);
+            ImGui.Combo("Select ROM", ref selectedIndex, roms, roms.Length);
             ImGui.Checkbox("Debug Mode", ref debugMode);
-            if (ImGui.Button("Load"))
+            if (ImGui.Button("Load") && selectedIndex != -1)
             {
+                Array.Clear(romFileBuffer);
+                Encoding.UTF8.GetBytes(roms[selectedIndex]).CopyTo(romFileBuffer, 0);
                 emulatorComponent.LoadRom(GetNullTerminatedString(romFileBuffer), debugMode ? CpuState.Halt : CpuState.Run);
                 ImGui.CloseCurrentPopup();
             }
@@ -318,25 +326,25 @@ public class EmulatorGame : Game
 
     protected void LayoutGameWindow(GameTime gameTime)
     {
-        if (ImGui.Begin("Game"))
+        /*if (ImGui.Begin("Game"))
         {
             var _windowTexture = emulatorComponent.GetWindowTexture();
             var _backgroundTexture = emulatorComponent.GetBackgroundTexture();
             var _spriteTexture = emulatorComponent.GetSpriteTexture();
             
             // Draw background first
-            ImGui.Image(this.backgroundTexture, new Vector2(_backgroundTexture.Width, _backgroundTexture.Height));
+            ImGui.Image(this.backgroundTexture, new Vector2(_backgroundTexture.Width * 2, _backgroundTexture.Height * 2));
             
             // Draw window on top
-            ImGui.SetCursorPos(new Vector2(0, 0));
-            ImGui.Image(this.windowTexture, new Vector2(_windowTexture.Width, _windowTexture.Height));
+            //ImGui.SetCursorPos(new Vector2(0, 0));
+            ImGui.Image(this.windowTexture, new Vector2(_windowTexture.Width * 2, _windowTexture.Height * 2));
             
             // Draw sprites on top
-            ImGui.SetCursorPos(new Vector2(0, 0));
-            ImGui.Image(this.spriteTexture, new Vector2(_spriteTexture.Width, _spriteTexture.Height));
+            //ImGui.SetCursorPos(new Vector2(0, 0));
+            ImGui.Image(this.spriteTexture, new Vector2(_spriteTexture.Width * 2, _spriteTexture.Height * 2));
             
             ImGui.End();
-        }
+        }*/
     }
 
     protected string GetNullTerminatedString(byte[] buffer)

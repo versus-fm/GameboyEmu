@@ -17,4 +17,9 @@ public struct TileAttribute
     public byte Palette => (byte)(data & 0x3);
     public bool Bank => (data & 0x4) != 0;
     public bool Priority => (data & 0b10000000) != 0;
+
+    public override string ToString()
+    {
+        return $"VFlip {VerticalFlip}, HFlip {HorizontalFlip}";
+    }
 }

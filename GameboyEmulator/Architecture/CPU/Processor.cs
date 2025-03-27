@@ -5,7 +5,7 @@ namespace GameboyEmulator.Architecture;
 
 public class Processor : IProcessor
 {
-    private const int CyclesPerSecond = 4194304;
+    private const int CyclesPerSecond = 4194304 / 2;
     private Registers registers;
     private uint cycleCount;
     private InstructionSet instructionSet;

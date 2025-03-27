@@ -14,13 +14,13 @@
 
     <ItemGroup>
       <None Update="roms\Tetris.gb">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="roms\Tetris0.gb">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Update="roms\drmario.gb">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
       <None Update="roms\DMG_ROM.bin">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -33,6 +33,21 @@
       </None>
       <None Update="roms\lycscx.gb">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="roms\palettely.gb">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="roms\lycscy.gb">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="roms\scxly.gb">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="roms\gbchrono.gb">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="roms\statcount-auto.gb">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 

@@ -26,6 +26,7 @@ public class EmulatorComponent : DrawableGameComponent
 
     private Color[] backgroundBuffer;
     private Color[] windowBuffer;
+    private Color[] spriteBuffer;
     
     public EmulatorComponent(EmulatorGame game) : base(game)
     {
@@ -34,11 +35,12 @@ public class EmulatorComponent : DrawableGameComponent
 
     public override void Initialize()
     {
-        this.backgroundTexture = new Texture2D(this.GraphicsDevice, 256, 256);
+        this.backgroundTexture = new Texture2D(this.GraphicsDevice, 160, 144);
         this.windowTexture = new Texture2D(this.GraphicsDevice, 160, 144);
         this.spriteTexture = new Texture2D(this.GraphicsDevice, 160, 144);
-        this.backgroundBuffer = new Color[256 * 256];
+        this.backgroundBuffer = new Color[160 * 144];
         this.windowBuffer = new Color[160 * 144];
+        this.spriteBuffer = new Color[160 * 144];
         base.Initialize();
     }
 
@@ -62,6 +64,23 @@ public class EmulatorComponent : DrawableGameComponent
             CopyFrame();
         }
         base.Update(gameTime);
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        if (hardware != null)
+        {
+            var scaling = 2;
+            var targetSize = new Point(160 * scaling, 144 * scaling);
+            var middle = new Point(this.GraphicsDevice.Viewport.Width / 2 - targetSize.X / 2,
+                this.GraphicsDevice.Viewport.Height / 2 - targetSize.Y / 2);
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Draw(backgroundTexture, new Rectangle(middle, targetSize), Color.White);
+            spriteBatch.Draw(windowTexture, new Rectangle(middle, targetSize), Color.White);
+            spriteBatch.Draw(spriteTexture, new Rectangle(middle - new Point(8 * scaling), targetSize), Color.White);
+            spriteBatch.End();
+        }
+        base.Draw(gameTime);
     }
 
     private void CopyFrame()
@@ -91,7 +110,8 @@ public class EmulatorComponent : DrawableGameComponent
     {
         var emulatorColorData = ppu.SpritePixels;
         var colorData = MemoryMarshal.Cast<GameboyEmulator.Architecture.Rendering.Color, Color>(emulatorColorData);
-        spriteTexture.SetData(colorData.ToArray());
+        colorData.CopyTo(spriteBuffer);
+        spriteTexture.SetData(spriteBuffer);
     }
 
     public Texture2D GetWindowTexture()

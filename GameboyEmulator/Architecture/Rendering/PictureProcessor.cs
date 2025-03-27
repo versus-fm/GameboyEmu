@@ -7,7 +7,7 @@ public class PictureProcessor : IPictureProcessor
     private Memory memory;
     private uint cycleCount = 0;
     
-    private Color[] backgroundPixels = new Color[256 * 256];
+    private Color[] backgroundPixels = new Color[160 * 144];
     private Color[] windowPixels = new Color[160 * 144];
     private Color[] spritePixels = new Color[160 * 144];
     
@@ -93,7 +93,8 @@ public class PictureProcessor : IPictureProcessor
     {
         if (cycleCount >= 204)
         {
-            if (memory.ReadHardwareRegister(Addresses.STAT, 4))
+            //Console.WriteLine(Convert.ToString(memory.ReadByte(Addresses.STAT), 2));
+            if (memory.ReadHardwareRegister(Addresses.STAT, 3))
             {
                 memory.RequestInterrupt(InterruptFlags.LCDStat);
             }
@@ -103,6 +104,8 @@ public class PictureProcessor : IPictureProcessor
             
             // Then render window on top
             RenderWindow();
+            
+            RenderSprites();
 
             if (memory.ReadByte(Addresses.LY) == 143)
             {
@@ -175,9 +178,8 @@ public class PictureProcessor : IPictureProcessor
         var scrollY = memory.ReadByte(Addresses.SCY);
         var scrollX = memory.ReadByte(Addresses.SCX);
         
-        //Console.WriteLine($"Rendering background line {y} with scroll ({scrollX}, {scrollY})");
         
-        for (var x = 0u; x < 256u; x++)
+        for (var x = 0u; x < 160; x++)
         {
             var backgroundX = (x + scrollX) % 256;
             var backgroundY = (y + scrollY) % 256;
@@ -187,7 +189,10 @@ public class PictureProcessor : IPictureProcessor
             var tileData = memory.GetBackgroundTile(tile);
             var colorIndex = tileData.GetColorIndex((uint)(backgroundX % 8), (uint)(backgroundY % 8));
             var color = memory.GetBackgroundColor(colorIndex);
-            backgroundPixels[x + 256 * y] = color;
+            if (y < 144)
+            {
+                backgroundPixels[x + 160 * y] = color;
+            }
         }
     }
     
@@ -230,6 +235,7 @@ public class PictureProcessor : IPictureProcessor
         var y = memory.ReadByte(Addresses.LY);
         if (y >= 144) return;
 
+
         // Get sprite data from OAM
         for (int i = 0; i < 40; i++)
         {
@@ -239,18 +245,22 @@ public class PictureProcessor : IPictureProcessor
             var attributes = new TileAttribute(memory.ReadByte((ushort)(0xFE00 + i * 4 + 3)));
 
             // Check if sprite is on current scanline
-            if (spriteY <= y + 16 && spriteY > y)
+            if (spriteY <= y + 8 && spriteY > y)
             {
                 var tileData = memory.GetObjectTile(tileNumber);
-                var pixelY = y - spriteY + 16;
+                var pixelY = y - spriteY + 8;
                 if (attributes.VerticalFlip)
-                    pixelY = 15 - pixelY;
+                {
+                    //pixelY = 7 - pixelY;
+                }
 
                 for (int x = 0; x < 8; x++)
                 {
                     var pixelX = x;
                     if (attributes.HorizontalFlip)
+                    {
                         pixelX = 7 - x;
+                    }
 
                     var colorIndex = tileData.GetColorIndex((uint)pixelX, (uint)pixelY);
                     var color = memory.GetObjectColor(colorIndex);
