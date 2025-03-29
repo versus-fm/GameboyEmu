@@ -91,4 +91,9 @@ public class Cartridge : ICartridge
     {
         throw new NotImplementedException();
     }
+
+    public void Initialize()
+    {
+        
+    }
 }

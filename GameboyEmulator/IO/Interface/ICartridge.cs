@@ -19,4 +19,6 @@ public interface ICartridge
     MbcType MBCType { get; }
     ushort GetMemoryBankCount();
     Span<byte> GetMemoryBank();
+
+    void Initialize();
 }

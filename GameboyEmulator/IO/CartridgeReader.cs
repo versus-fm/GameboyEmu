@@ -18,6 +18,7 @@ public class CartridgeReader
             _ => throw new NotImplementedException()
         };
         cartridge.CopyFrom(data);
+        cartridge.Initialize();
         return cartridge;
     }
 

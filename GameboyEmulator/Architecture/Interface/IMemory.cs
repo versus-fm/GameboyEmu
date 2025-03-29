@@ -45,14 +45,14 @@ public interface IMemory
         this[(ushort)Addresses.DIV]++;
     }
 
-    bool TimerEnabled => (this[0xFF07] & 0b100) == 1;
+    bool TimerEnabled => (this[0xFF07] & 0b100) == 0b100;
 
     uint TimerSpeed => (this[0xFF07] & 0b11) switch
     {
-        0b00 => 1024,
-        0b01 => 16,
-        0b10 => 64,
-        0b11 => 256,
+        0b00 => 1024 / 4,
+        0b01 => 16 / 4,
+        0b10 => 64 / 4,
+        0b11 => 256 / 4,
         _ => throw new Exception()
     };
 

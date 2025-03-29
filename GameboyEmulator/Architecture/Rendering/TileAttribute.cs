@@ -12,7 +12,7 @@ public struct TileAttribute
         this.data = data;
     }
     
-    public bool VerticalFlip => (data & 0x80) != 0;
+    public bool VerticalFlip => (data & 0b1000000) != 0;
     public bool HorizontalFlip => (data & 0x20) != 0;
     public byte Palette => (byte)(data & 0x3);
     public bool Bank => (data & 0x4) != 0;

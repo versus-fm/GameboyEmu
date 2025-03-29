@@ -27,10 +27,10 @@ public class PictureProcessor : IPictureProcessor
         {
             if (last)
             {
-                Console.WriteLine("LCD Disabled - Clearing screen");
-                Array.Clear(backgroundPixels, 0, backgroundPixels.Length);
-                Array.Clear(windowPixels, 0, windowPixels.Length);
-                Array.Clear(spritePixels, 0, spritePixels.Length);
+                //Console.WriteLine("LCD Disabled - Clearing screen");
+                //Array.Clear(backgroundPixels, 0, backgroundPixels.Length);
+                //Array.Clear(windowPixels, 0, windowPixels.Length);
+                //Array.Clear(spritePixels, 0, spritePixels.Length);
             }
             last = false;
             return;
@@ -39,9 +39,9 @@ public class PictureProcessor : IPictureProcessor
         if (!last)
         {
             //Console.WriteLine("LCD Enabled - Initializing screen");
-            Array.Clear(backgroundPixels, 0, backgroundPixels.Length);
-            Array.Clear(windowPixels, 0, windowPixels.Length);
-            Array.Clear(spritePixels, 0, spritePixels.Length);
+            //Array.Clear(backgroundPixels, 0, backgroundPixels.Length);
+            //Array.Clear(windowPixels, 0, windowPixels.Length);
+            //Array.Clear(spritePixels, 0, spritePixels.Length);
         }
         last = true;
 
@@ -251,7 +251,7 @@ public class PictureProcessor : IPictureProcessor
                 var pixelY = y - spriteY + 8;
                 if (attributes.VerticalFlip)
                 {
-                    //pixelY = 7 - pixelY;
+                    pixelY = 7 - pixelY;
                 }
 
                 for (int x = 0; x < 8; x++)
